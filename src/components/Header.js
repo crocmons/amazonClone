@@ -1,9 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Image from "next/image"
 import {AiOutlineSearch} from "react-icons/ai"
 import { AiOutlineShoppingCart } from 'react-icons/ai'
 import {FiMenu} from "react-icons/fi"
+import { selectItems } from '../slices/basketSlice'
+import { useSelector } from 'react-redux'
+import {signIn, signOut, useSession} from "next-auth/react"
+import { useRouter } from 'next/router'
+
+
 const Header = () => {
+const items = useSelector(selectItems);
+const { data:session }= useSession();
+const router = useRouter();
   return (
     <header>
       {/* Top Navbar */}
@@ -11,6 +20,7 @@ const Header = () => {
         <div className='flex items-center bg-amazonBlue p-1 flex-grow py-2'>
           <div className='mt-2 flex items-center flex-grow sm:flex-grow-0'>
             <Image 
+            onClick={()=>router.push("/")}
             src='https://links.papareact.com/f90'
             width={150}
             height={40}
@@ -26,8 +36,10 @@ const Header = () => {
           
           {/* right */}
            <div className='text-white flex space-x-6 items-center text-xs mx-6 whitespace-nowrap'>
-              <div className='link'>
-                    <p>Hello Oishi</p>
+              <div onClick={!session ? signIn : signOut} className='link'>
+                    <p>{
+                        session ? `Hello, ${session.user.name}` : (<button className='text-sm outline-white p-1 my-1'>Sign In</button>)
+                      }</p>
                     <p className="font-extrabold md:text-sm">Account & Lists</p>
               </div>
 
@@ -36,8 +48,8 @@ const Header = () => {
               <p className="font-extrabold md:text-sm">& Orders</p>
               </div>
 
-              <div className='relative link flex items-center'>
-                <span className='absolute top-0 right-0 md:right-10 h-4 w-4 bg-yellow-400 text-center rounded-full text-black font-bold'>0</span>
+              <div onClick={()=>router.push("/checkout")} className='relative link flex items-center'>
+                <span className='absolute top-0 right-0 md:right-10 h-4 w-4 bg-yellow-400 text-center rounded-full text-black font-bold'>{items.length}</span>
                
                  <AiOutlineShoppingCart className='text-2xl w-10 h-12'/>
                  <p className="hidden md:inline font-extrabold md:text-sm mt-2">Baskets</p>

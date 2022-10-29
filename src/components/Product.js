@@ -2,15 +2,30 @@ import React, { useState } from 'react'
 import {FiStar} from "react-icons/fi"
 import CurrencyFormat from 'react-currency-format'
 import Image from "next/image"
+import { useDispatch } from 'react-redux'
+import {addToBasket} from "../slices/basketSlice"
 const min = 1
 const max = 5
 
 function Product({id,title,price,description,category,image}) {
-
+   const dispatch = useDispatch();
   const [rating] = useState(
     Math.floor(Math.random() * (max - min + 1)) + min
   )
   const [hasPrime] = useState(Math.random() < 0.5)
+
+  const additemtobasket = ()=>{
+    const product = {
+      id,
+      title,
+      price,
+      description,
+      category,
+      image,
+      hasPrime
+    }
+    dispatch(addToBasket(product))
+  }
   
   return (
     <div className='relative flex flex-col m-5 bg-white z-30 p-10'>
@@ -49,7 +64,7 @@ function Product({id,title,price,description,category,image}) {
     </div>
   )
 }
-<button className='mt-auto button'>Add to Basket</button>
+<button onClick={additemtobasket} className='mt-auto button'>Add to Basket</button>
     </div>
   )
 }
