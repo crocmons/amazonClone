@@ -13,6 +13,16 @@ const Header = () => {
 const items = useSelector(selectItems);
 const { data:session }= useSession();
 const router = useRouter();
+const [searchTerm, setsearchTerm] = useState("");
+const handleclick =(e)=>{
+  e.key === "Enter"
+  if (searchTerm) {
+      items.filter((item) => item.title.toLowerCase().indexOf(value) !== -1)
+      setsearchTerm("");
+  } 
+}
+
+
   return (
     <header>
       {/* Top Navbar */}
@@ -29,9 +39,11 @@ const router = useRouter();
             />
           </div>
           {/* search */}
+          <div>
           <div className='hidden sm:flex items-center h-10 rounded-md flex-grow  cursor-pointer px-3 bg-yellow-400 hover:bg-yellow-500'>
-            <input className='p-2 h-full w-6 flex-grow flex-shrink rounded-l-md focus:outline-none px-4' type="text" placeholder='search'/>
+            <input className='p-2 h-full w-6 flex-grow flex-shrink rounded-l-md focus:outline-none px-4' type="text" placeholder='search'value={searchTerm} onChange={(e)=>setsearchTerm(e.target.value.toLowerCase())} onKeyUp={handleclick}/>
             <AiOutlineSearch className='text-2xl w-12 h-12 p-1'/>
+          </div>
           </div>
           
           {/* right */}
@@ -43,7 +55,7 @@ const router = useRouter();
                     <p className="font-extrabold md:text-sm">Account & Lists</p>
               </div>
 
-              <div className='link'>
+              <div onClick={()=> session && router.push("/orders")} className='link'>
               <p>Returns</p>
               <p className="font-extrabold md:text-sm">& Orders</p>
               </div>
@@ -59,7 +71,7 @@ const router = useRouter();
 
         {/* Bottom navbar */}
         <div className='flex items-center  space-x-3 p-2 pl-6 bg-amazonBlue-light text-white text-sm'>
-          <p className='link flex items-center'>
+          <p onClick={()=>router.push("/")} className='link flex items-center'>
             <FiMenu className='mr-1'/>
             All
           </p>
